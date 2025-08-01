@@ -2,9 +2,10 @@ name: 'C++ CI'
 
 on:
   push:
-    branches:
-      - master
-      - feature/github_actions
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
 
 jobs:
   build:

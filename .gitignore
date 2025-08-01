@@ -1,0 +1,60 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Generated version header
+version.h
+
+# Executables
+*.exe
+*.out
+*.app
+helloworld_cli
+test_version
+
+# Object files
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+*.lib
+*.a
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Package files
+*.deb
+*.rpm
+*.tar.gz
+*.zip
+
+# Test results
+Testing/

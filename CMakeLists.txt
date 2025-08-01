@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
-set(PROJECT_VESRION 0.0.${PATCH_VERSION})
+# Set policy to use new Boost finding mechanism
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 NEW)
+endif()
 
-project(helloworld VERSION ${PROJECT_VESRION})
+
+set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
+set(PROJECT_VERSION 0.0.${PATCH_VERSION})
+
+project(helloworld VERSION ${PROJECT_VERSION})
 
 option(WITH_BOOST_TEST "Whether to build Boost test" ON)
 
@@ -34,14 +40,15 @@ if(WITH_BOOST_TEST)
         CXX_STANDARD_REQUIRED ON
     )
 
-    set_target_properties(test_version PROPERTIES
-        COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
-        INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
-    )
+    # Fix: Use target_compile_definitions and target_include_directories instead
+    target_compile_definitions(test_version PRIVATE BOOST_TEST_DYN_LINK)
+    target_include_directories(test_version PRIVATE ${Boost_INCLUDE_DIRS})
 
-    target_link_libraries(test_version
-        ${Boost_LIBRARIES}
-        helloworld
+    # Modern way: Use Boost::unit_test_framework target
+    target_link_libraries(test_version PRIVATE
+            Boost::unit_test_framework
+            helloworld
+
     )
 endif()
 

@@ -1,6 +1,10 @@
 # otus-cpp-prof-2025
 OTUS C++ Prof training by Aleksandr Troshin
 
+> ## List of Homework
+> - Set up CI/CD
+
+
 > ## Useful links
 > - [S.Chacon, B.Straub Pro Git](https://git-scm.com/book/ru/v2)
 > - [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)

@@ -33,20 +33,20 @@ int main(int argc, char * argv[]) {
     func1(42); // 1.4. param type ? > int
     func1(pi); // 1.5. param type ? > Pointer to Int
     func1(cpi); // 1.6. param type ? > Pointer to Const Int
-    func1<int>({1}); // 1.7. param type ? > Error: multiple valid container types (vector, list, initializer_list, ...) and compiler can't decide which one.
-    func1<int>({1, 2, 3}); // 1.8. param type ? > std::list_initializer<int>
-    func2(i); // 2.1. param type ? > int
-    func2(ci); // 2.2. param type ? > Const int
-    func2(cir); // 2.3. param type ? > Const int
-    func2(42); // 2.4. param type ? > R-value int (Error: Function accepts L-value only)
-    func2(pi); // 2.5. param type ? > Pointer to int
-    func2(cpi); // 2.6. param type ? > Pointer to Const int
-    func3(i); // 3.1. param type ? > int (Error: Function accepts pointer only)
-    func3(ci); // 3.2. param type ?
-    func3(cir); // 3.3. param type ?
-    func3(42); // 3.4. param type ?
-    func3(pi); // 3.5. param type ?
-    func3(cpi); // 3.6. param type ?
+    func1({1}); // 1.7. param type ? > Error: multiple equally  suitable types can be deduced: a scalar (int) and few containers (vector, list, initializer_list, ...). Compiler don't have a rule to chose.
+    func1({1, 2, 3}); // 1.8. param type ? > Error: multiple equally valid container types are suitable for template T (vector, list, initializer_list, ...). Compiler don't have a rule to chose.
+    func2(i); // 2.1. param type ? > Reference to int
+    func2(ci); // 2.2. param type ? > Reference to Const int
+    func2(cir); // 2.3. param type ? > Reference to Const int
+    func2(42); // 2.4. param type ? > Error: Function wants to make a reference to a variable, but got not a variable, but a temporary value, . It can't make a reference (alias) of a temporary value.
+    func2(pi); // 2.5. param type ? > Reference to a Pointer to int
+    func2(cpi); // 2.6. param type ? > Reference to a Pointer to Const int
+    func3(i); // 3.1. param type ? > Error: A Pointer expected, but got an int.
+    func3(ci); // 3.2. param type ? > Error: A Pointer expected, but got a Const int.
+    func3(cir); // 3.3. param type ? > Error: A Pointer expected, but got a Reference to Const int.
+    func3(42); // 3.4. param type ? > Error: A Pointer expected, but got a Temporary int.
+    func3(pi); // 3.5. param type ? > Pointer to int
+    func3(cpi); // 3.6. param type ? > Pointer to Const int
     func4(i); // 4.1. param type ?
     func4(ci); // 4.2. param type ?
     func4(cir); // 4.3. param type ?

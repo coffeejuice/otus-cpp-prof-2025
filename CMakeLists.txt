@@ -15,8 +15,8 @@ option(WITH_BOOST_TEST "Whether to build Boost test" ON)
 
 configure_file(version.h.in version.h)
 
-add_executable(training_1 training_1.cpp)
-add_executable(ip_filter ip_filter.cpp)
+add_executable(ip_filter ip_filter.cpp
+)
 add_library(version_lib version_lib.cpp)
 
 set_target_properties(ip_filter version_lib PROPERTIES

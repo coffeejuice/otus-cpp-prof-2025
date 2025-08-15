@@ -5,19 +5,52 @@ if(POLICY CMP0167)
     cmake_policy(SET CMP0167 NEW)
 endif()
 
-
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 
 project(ip_filter_project VERSION ${PROJECT_VERSION})
 
-option(WITH_BOOST_TEST "Whether to build Boost test" ON)
+option(WITH_GTEST "Whether to build Google-test" ON)
 
-configure_file(version.h.in version.h)
+configure_file(src/version.h.in version.h)
 
-add_executable(ip_filter ip_filter.cpp
+#***********************************************************************************#
+#************************************ G-TESTS **************************************#
+#***********************************************************************************#
+
+if(WITH_GTEST)
+    #download googletest sources at configure time to build directory
+    #build from sources at build time
+    include(FetchContent)
+    #describe how to get content
+    FetchContent_Declare(
+            googletest
+            GIT_REPOSITORY https://github.com/google/googletest.git
+            #it is advisable to use a hash for GIT_TAG rather than a branch or tag name.
+            #A commit hash is more secure and helps to confirm that the downloaded contents are what you expected.
+            GIT_TAG        6910c9d   # release-1.16.0
+    )
+    #make sure that all the dependencies are available
+    FetchContent_MakeAvailable(googletest)
+
+    #no add_subdirectory to googletest requires!
+
+    # Prevent overriding the parent project's compiler/linker
+    # settings on Windows
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+endif()
+
+#***********************************************************************************#
+#************************************ G-TESTS **************************************#
+#***********************************************************************************#
+
+add_executable(
+        ip_filter
+        src/ip_filter.cpp
 )
-add_library(version_lib version_lib.cpp)
+add_library(
+        version_lib
+        src/version_lib.cpp)
 
 set_target_properties(ip_filter version_lib PROPERTIES
     CXX_STANDARD 17
@@ -32,52 +65,54 @@ target_link_libraries(ip_filter PRIVATE
     version_lib
 )
 
-if(WITH_BOOST_TEST)
-    find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-    add_executable(test_version test_version.cpp)
+# Set compiler warning flags for ip_filter
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(ip_filter PRIVATE /W4 /WX)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(ip_filter PRIVATE -Wall -Wextra -pedantic -Werror)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    target_compile_options(ip_filter PRIVATE -Wall -Wextra -pedantic -Werror)
+else()
+    message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. No specific warning flags set.")
+endif()
 
-    set_target_properties(test_version PROPERTIES
-        CXX_STANDARD 17
-        CXX_STANDARD_REQUIRED ON
+if(WITH_GTEST)
+    # Test target
+    add_executable(
+            google_test_list
+            google_tests/test_list.cpp
+
+            # Main tests
+            google_tests/tests.cpp
     )
 
-    # Fix: Use target_compile_definitions and target_include_directories instead
-    target_compile_definitions(test_version PRIVATE BOOST_TEST_DYN_LINK)
-    target_include_directories(test_version PRIVATE ${Boost_INCLUDE_DIRS})
+    # Add src to the include directories for the test target
+    target_include_directories(
+            google_test_list PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    )
 
-    # Modern way: Use Boost::unit_test_framework target
-    target_link_libraries(test_version PRIVATE
-            Boost::unit_test_framework
+    # Link test target against gtest libraries
+    target_link_libraries(
+            google_test_list PRIVATE
+            gtest
             version_lib
+    )
 
-    )
-endif()
+    set_target_properties(google_test_list PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-if (MSVC)
-    target_compile_options(ip_filter PRIVATE
-        /W4
-    )
-    target_compile_options(version_lib PRIVATE
-        /W4
-    )
-    if(WITH_BOOST_TEST)
-        target_compile_options(test_version PRIVATE
-            /W4
-        )
-    endif()
-else ()
-    target_compile_options(ip_filter PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-    target_compile_options(version_lib PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-    if(WITH_BOOST_TEST)
-        target_compile_options(test_version PRIVATE
-            -Wall -Wextra -pedantic -Werror
-        )
+    # Set compiler warning flags based on compiler identification
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        target_compile_options(google_test_list PRIVATE /W4 /WX)
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_compile_options(google_test_list PRIVATE -Wall -Wextra -pedantic -Werror)
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+        target_compile_options(google_test_list PRIVATE -Wall -Wextra -pedantic -Werror)
+    else()
+        message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. No specific warning flags set.")
     endif()
 endif()
+
 
 install(TARGETS ip_filter RUNTIME DESTINATION bin)
 
@@ -88,8 +123,3 @@ set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 set(CPACK_PACKAGE_CONTACT example@example.com)
 include(CPack)
-
-if(WITH_BOOST_TEST)
-    enable_testing()
-    add_test(test_version test_version)
-endif()

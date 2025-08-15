@@ -45,5 +45,5 @@ jobs:
       - name: Calculate and print MD5 hash of ip_filter output
         run: |
           echo "Calculating MD5 hash of ip_filter output..."
-          cat ip_filter.tsv | ./ip_filter | md5sum | tee ip_filter_output.md5
+          cat data/ip_filter.tsv | ./ip_filter | md5sum | tee ip_filter_output.md5
           echo "MD5 hash: $(cat ip_filter_output.md5)"

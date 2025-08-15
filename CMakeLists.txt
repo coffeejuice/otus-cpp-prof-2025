@@ -44,15 +44,23 @@ endif()
 #************************************ G-TESTS **************************************#
 #***********************************************************************************#
 
+# Create ip_filter_lib for shared code
+add_library(
+        ip_filter_lib
+        src/ip_filter_lib.cpp
+)
+
 add_executable(
         ip_filter
         src/ip_filter.cpp
 )
+
 add_library(
         version_lib
-        src/version_lib.cpp)
+        src/version_lib.cpp
+)
 
-set_target_properties(ip_filter version_lib PROPERTIES
+set_target_properties(ip_filter ip_filter_lib version_lib PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
@@ -61,7 +69,12 @@ target_include_directories(version_lib
     PRIVATE "${CMAKE_BINARY_DIR}"
 )
 
+target_include_directories(ip_filter_lib
+    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
+)
+
 target_link_libraries(ip_filter PRIVATE
+    ip_filter_lib
     version_lib
 )
 
@@ -81,8 +94,6 @@ if(WITH_GTEST)
     add_executable(
             google_test_list
             google_tests/test_list.cpp
-
-            # Main tests
             google_tests/tests.cpp
     )
 
@@ -96,6 +107,7 @@ if(WITH_GTEST)
     target_link_libraries(
             google_test_list PRIVATE
             gtest
+            ip_filter_lib
             version_lib
     )
 
@@ -112,7 +124,6 @@ if(WITH_GTEST)
         message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. No specific warning flags set.")
     endif()
 endif()
-
 
 install(TARGETS ip_filter RUNTIME DESTINATION bin)
 

@@ -1,13 +1,22 @@
 # otus-cpp-prof-2025
 OTUS C++ Prof training by Aleksandr Troshin
 
-> ## Online compilers
-> - [cpp.sh](http://cpp.sh/)
-> - [onlinegdb.com](https://www.onlinegdb.com/)
-> - [cppinsights.io](https://cppinsights.io/)
-> - [godbolt.org](https://godbolt.org/)
-
-
+> ## Task
+> ### Особенности C++11. Move, variadic templates
+> - rvalue и lvalue ссылки;
+> - move semantic;
+> - variadic Templates;
+> - POD.
+>
+> ### Полезные материалы
+> - [Презентация к уроку](https://cdn.otus.ru/media/private/b1/4d/03_Cpp14_move-12995-b14dd0.pdf?hash=MZXMTxjmIZA3DbRpTR9pbw&expires=1755527451)
+> - [Parameter pack(since C++11) - cppreference.com](https://en.cppreference.com/w/cpp/language/parameter_pack.html)
+> - [Подробное введение в rvalue-ссылки для тех, кому не хватило краткого](https://habr.com/ru/articles/322132/)
+> - [Move constructors - cppreference.com](https://en.cppreference.com/w/cpp/language/move_constructor.html)
+> - [std::forward - cppreference.com](https://en.cppreference.com/w/cpp/utility/forward)
+> - [std::move - cppreference.com](https://en.cppreference.com/w/cpp/utility/move)
+> - [Идеальная передача и универсальные ссылки в C++](https://habr.com/ru/articles/242639/)
+>
 > ## Useful links
 > - [S.Chacon, B.Straub Pro Git](https://git-scm.com/book/ru/v2)
 > - [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)

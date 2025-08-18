@@ -18,6 +18,7 @@ OTUS C++ Prof training by Aleksandr Troshin
 > - [Идеальная передача и универсальные ссылки в C++](https://habr.com/ru/articles/242639/)
 >
 > ## Useful links
+> - [C++ Core Guidelines][https://github.com/isocpp/CppCoreGuidelines]
 > - [S.Chacon, B.Straub Pro Git](https://git-scm.com/book/ru/v2)
 > - [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
 > - [Bjarne Stroustrup's homepage](https://www.stroustrup.com/index.html)

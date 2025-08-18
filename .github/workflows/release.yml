@@ -2,9 +2,9 @@ name: 'C++ CI'
 
 on:
   push:
-    branches:
-      - master
-      - feature/github_actions
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
 
 jobs:
   build:
@@ -13,11 +13,15 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
-      - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
+      # Remove Boost Test installation
+      # - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
+      # Change to use Google Test instead of Boost Test
+      - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_GTEST=ON
       - run: cmake --build .
-      - run: cmake --build . --target test
+      - run: ./google_test_list
       - run: cmake --build . --target package
+      - name: List generated files
+        run: ls -la *.deb
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -35,6 +39,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./helloworld-0.0.${{ github.run_number }}-Linux.deb
-          asset_name: helloworld-0.0.${{ github.run_number }}-Linux.deb
+          asset_path: ./ip_filter-0.0.${{ github.run_number }}-Linux.deb
+          asset_name: ip_filter-0.0.${{ github.run_number }}-Linux.deb
           asset_content_type: application/vnd.debian.binary-package
+      - name: Calculate and print MD5 hash of ip_filter output
+        run: |
+          echo "Calculating MD5 hash of ip_filter output..."
+          cat data/ip_filter.tsv | ./ip_filter | md5sum | tee ip_filter_output.md5
+          echo "MD5 hash: $(cat ip_filter_output.md5)"

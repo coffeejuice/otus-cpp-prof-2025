@@ -1,6 +1,13 @@
 # otus-cpp-prof-2025
 OTUS C++ Prof training by Aleksandr Troshin
 
+> ## Online compilers
+> - [cpp.sh](http://cpp.sh/)
+> - [onlinegdb.com](https://www.onlinegdb.com/)
+> - [cppinsights.io](https://cppinsights.io/)
+> - [godbolt.org](https://godbolt.org/)
+
+
 > ## Useful links
 > - [S.Chacon, B.Straub Pro Git](https://git-scm.com/book/ru/v2)
 > - [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)

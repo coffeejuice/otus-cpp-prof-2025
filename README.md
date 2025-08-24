@@ -1,21 +1,27 @@
 # otus-cpp-prof-2025
 OTUS C++ Prof training by Aleksandr Troshin
 
-> ## Task
+> ## Реализация умных указателей
+> - рассмотреть правило: "взял память - верни, когда больше не нужна";
+> - объяснить, как следовать этому правилу;
+> - разобраться с разными типами умных указателей.
+> 
 > ### Особенности C++11. Move, variadic templates
-> - rvalue и lvalue ссылки;
-> - move semantic;
-> - variadic Templates;
-> - POD.
+> - область видимости;
+> - время жизни;
+> - проблемы управления ресурсами;
+> - глупый умный указатель;
+> - unique_ptr. Shared_ptr;
+> - weak_ptr;
+> - enable_shared_from_this.
 >
 > ### Полезные материалы
 > - [Презентация к уроку](https://cdn.otus.ru/media/private/b1/4d/03_Cpp14_move-12995-b14dd0.pdf?hash=MZXMTxjmIZA3DbRpTR9pbw&expires=1755527451)
-> - [Parameter pack(since C++11) - cppreference.com](https://en.cppreference.com/w/cpp/language/parameter_pack.html)
-> - [Подробное введение в rvalue-ссылки для тех, кому не хватило краткого](https://habr.com/ru/articles/322132/)
-> - [Move constructors - cppreference.com](https://en.cppreference.com/w/cpp/language/move_constructor.html)
-> - [std::forward - cppreference.com](https://en.cppreference.com/w/cpp/utility/forward)
-> - [std::move - cppreference.com](https://en.cppreference.com/w/cpp/utility/move)
-> - [Идеальная передача и универсальные ссылки в C++](https://habr.com/ru/articles/242639/)
+> - [C++: Polymorphic cloning and the CRTP (Curiously Recurring Template Pattern) Ясно и понятно про идиому CRTP](https://katyscode.wordpress.com/2013/08/22/c-polymorphic-cloning-and-the-crtp-curiously-recurring-template-pattern/)
+> - [A Proposal to Add General Purpose Smart Pointers to the Library Technical Report Для гурманов - proposal на добавление std::shared_ptr в стандарт. Неплохо ](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2003/n1431.htm)
+> - [std::unique_ptr - cppreference.com](https://en.cppreference.com/w/cpp/memory/unique_ptr)
+> - [std::weak_ptr - cppreference.com](https://en.cppreference.com/w/cpp/memory/weak_ptr)
+> - [std::shared_ptr - cppreference.com](https://en.cppreference.com/w/cpp/memory/shared_ptr)
 >
 > ## Useful links
 > - [C++ Core Guidelines][https://github.com/isocpp/CppCoreGuidelines]

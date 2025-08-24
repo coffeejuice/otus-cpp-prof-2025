@@ -8,11 +8,18 @@ endif()
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 
-project(ip_filter_project VERSION ${PROJECT_VERSION})
+project(cpp_prof_2025_project VERSION ${PROJECT_VERSION})
+
+# Apply warning flags globally without generator expressions (works with CLion's probe)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/W4 /WX)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
 
 option(WITH_GTEST "Whether to build Google-test" ON)
-
-configure_file(src/version.h.in version.h)
 
 #***********************************************************************************#
 #************************************ G-TESTS **************************************#
@@ -40,54 +47,43 @@ if(WITH_GTEST)
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif()
 
-#***********************************************************************************#
-#************************************ G-TESTS **************************************#
-#***********************************************************************************#
-
-# Create ip_filter_lib for shared code
-add_library(
-        ip_filter_lib
-        src/ip_filter_lib.cpp
+add_executable(
+        00_problem
+        src/00_problem.cpp
 )
 
 add_executable(
-        ip_filter
-        src/ip_filter.cpp
+        01_basic_case
+        src/01_basic_case.cpp
+        src/01_simple_smart_ptr.h
 )
 
-add_library(
-        version_lib
-        src/version_lib.cpp
+
+add_executable(
+        02_basic_case
+        src/02_basic_case.cpp
+        src/02_simple_shared_ptr.h
 )
 
-set_target_properties(ip_filter ip_filter_lib version_lib PROPERTIES
+add_executable(
+        03_minimal_weak_main
+        src/03_minimal_weak_main.cpp
+        src/03_minimal_weak_ptr.h
+)
+
+set_target_properties(
+        00_problem
+        01_basic_case
+        02_basic_case
+        03_minimal_weak_main
+        PROPERTIES
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
 )
 
-target_include_directories(version_lib
-    PRIVATE "${CMAKE_BINARY_DIR}"
-)
-
-target_include_directories(ip_filter_lib
-    PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
-
-target_link_libraries(ip_filter PRIVATE
-    ip_filter_lib
-    version_lib
-)
-
-# Set compiler warning flags for ip_filter
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(ip_filter PRIVATE /W4 /WX)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(ip_filter PRIVATE -Wall -Wextra -pedantic -Werror)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    target_compile_options(ip_filter PRIVATE -Wall -Wextra -pedantic -Werror)
-else()
-    message(WARNING "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. No specific warning flags set.")
-endif()
+#***********************************************************************************#
+#************************************ G-TESTS **************************************#
+#***********************************************************************************#
 
 if(WITH_GTEST)
     # Test target
@@ -107,8 +103,6 @@ if(WITH_GTEST)
     target_link_libraries(
             google_test_list PRIVATE
             gtest
-            ip_filter_lib
-            version_lib
     )
 
     set_target_properties(google_test_list PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
@@ -125,7 +119,15 @@ if(WITH_GTEST)
     endif()
 endif()
 
-install(TARGETS ip_filter RUNTIME DESTINATION bin)
+# Install the actual executables you define here.
+# NOTE: Do not reference a non-existent target like 'ip_filter'.
+install(TARGETS
+    00_problem
+    01_basic_case
+    02_basic_case
+    03_minimal_weak_main
+    RUNTIME DESTINATION bin
+)
 
 set(CPACK_GENERATOR DEB)
 set(CPACK_PACKAGE_NAME "ip_filter")
